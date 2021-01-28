@@ -9,6 +9,9 @@
   <div>
     <button onclick='makeLottoNumbers()'>로또 생성</button>
     <button onclick='resetLotto()'>초기화</button>
+    <input type='text' id='winning-nums' placeholder='당첨번호 6개를 ,와 함께 입력해주세요.' style='width : 250px;'>
+        <button onclick="outputWinningNumber()">맞춰보기</button></input>
+    <div id='winning-nums-div'></div>
     <p>--------------------------------------</p>
   </div>
   <div class='lotto-num-div' id='lotto-num-div'>

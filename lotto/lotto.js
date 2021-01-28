@@ -21,7 +21,7 @@ function makeLottoNumbers() {
 // 로또 번호를 화면에 표시.
 function outputLottoNumbers(numberSet) {
     let numbersElem = '';
-    numbersElem += "<div><span>" + nthTry + "번째 생성 : </span>";
+    numbersElem += "<div id='try-" + nthTry + "'><span>" + nthTry + "번째 생성 : </span>";
 
     let i = 1;
     for (let number of numberSet) {
@@ -50,3 +50,57 @@ function resetLotto() {
     nthTry = 1;
 }
 
+// 당첨번호를 화면에 표시.
+function outputWinningNumber() {
+    const winNumDiv = document.getElementById('winning-nums-div');
+    const winNums = document.getElementById('winning-nums');
+
+    let numArr = winNums.value.split(',');
+
+    if (numArr.length != 6) {
+        alert('당첨번호는 6개를 정확히 입력해주세요!');
+        winNums.focus();
+        return;
+    }
+
+    let winNumElem = '';
+    for (let i = 0; i < numArr.length; i++) {
+        winNumElem += '<span class="winning-nums" id="winning-num-' + (i + 1) + '">' + numArr[i] + '</span>';
+    }
+    winNumDiv.innerHTML = '';
+    winNumDiv.insertAdjacentHTML('afterbegin',winNumElem);
+
+    if (nthTry > 0) {
+        matchingNums();
+    }
+}
+
+// 생성번호들과 당첨번호를 맞춰보기.
+function matchingNums() {
+    let tryTimes = nthTry; // 발행한 로또 갯수.
+    let winNums = document.getElementsByClassName('winning-nums'); // 당첨번호들 가져오기.
+    // 로또 번호를 가져오기.
+    let tryElems = document.getElementById('try-'+tryTimes).getElementsByClassName('lotto-num');
+
+    // 로또 번호를 비교하기.
+    let matchedNums = [];
+    let winNum;
+    let tryNum;
+    for (let i = 0; i < winNums.length; i++) {
+        for (let j = 0; j < tryElems.length; j++) {
+            winNum = winNums[i].innerHTML;
+            tryNum = tryElems[j].innerHTML;
+            if (winNum === tryNum) {
+                matchedNums.push(tryNum);
+            }
+        }
+    }
+
+    console.log(matchedNums);
+
+    // 당첨번호 엘리먼트 만들기.
+    let matchedNumElem = '';
+
+
+
+}
