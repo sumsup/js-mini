@@ -51,7 +51,7 @@ function resetLotto() {
     nthTry = 1;
 }
 
-// 당첨번호를 화면에 표시.
+// 금주의 로또번호를 화면에 표시.
 function outputWinningNumber() {
     const winNumDiv = document.getElementById('winning-nums-div');
     const winNums = document.getElementById('winning-nums');
@@ -105,6 +105,7 @@ function matchingNums(tryNth) {
     }
 
     outputMatchedNumCnt(matchedNumCnt, tryNth);
+    outputMatchedNum(matchedNums, tryNth);
     console.log(matchedNums);
 
     // 당첨번호 엘리먼트 만들기.
@@ -115,6 +116,22 @@ function matchingNums(tryNth) {
 function outputMatchedNumCnt(matchedNumCnt, tryNth) {
     let cntElem = '<div><span> 당첨 갯수 : ' + matchedNumCnt + '</span></div>';
     document.getElementById('try-'+tryNth).insertAdjacentHTML('afterend', cntElem);
+}
+
+// 시도한 것중에 당첨된 숫자를 표시
+function outputMatchedNum(matchedNumArr, tryNth) {
+    let matchedNums = '';
+    for (let i = 0; i < matchedNumArr.length; i++) {
+        if (i !== (matchedNumArr.length - 1)) {
+            matchedNums += matchedNumArr[i] + ", ";
+        }
+        else if (i === (matchedNumArr.length - 1)) {
+            matchedNums += matchedNumArr[i];
+        }
+    }
+
+    matchedNumElem = '<div><span>당첨번호 : ' + matchedNums + '</span></div>';
+    document.getElementById('try-'+tryNth).insertAdjacentHTML('afterend',matchedNumElem);
 }
 
 
