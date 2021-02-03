@@ -133,5 +133,3 @@ function outputMatchedNum(matchedNumArr, tryNth) {
     matchedNumElem = '<div><span>당첨번호 : ' + matchedNums + '</span></div>';
     document.getElementById('try-'+tryNth).insertAdjacentHTML('afterend',matchedNumElem);
 }
-
-
