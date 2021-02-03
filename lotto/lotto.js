@@ -16,6 +16,7 @@ function makeLottoNumbers() {
     }
 
     outputLottoNumbers(numberSet);
+
 }
 
 // 로또 번호를 화면에 표시.
@@ -31,7 +32,7 @@ function outputLottoNumbers(numberSet) {
     numbersElem += "</div>";
 
     const NOW_DATE = makeDate();
-    numbersElem += '<span> 생성시간 : ' + NOW_DATE + '</span>';
+    numbersElem += '<div><span> 생성시간 : ' + NOW_DATE + '</span></div>';
     numbersElem += '<br><p>---------------------------------</p>';
     document.getElementById('lotto-num-div').insertAdjacentHTML('afterbegin',numbersElem);
     nthTry++;
@@ -63,44 +64,57 @@ function outputWinningNumber() {
         return;
     }
 
-    let winNumElem = '';
+    let winNumElem = '<span>당첨번호 : </span>';
     for (let i = 0; i < numArr.length; i++) {
-        winNumElem += '<span class="winning-nums" id="winning-num-' + (i + 1) + '">' + numArr[i] + '</span>';
+        winNumElem += '<span class="winning-nums" id="winning-num-' + (i + 1) + '">' + numArr[i];
+        if (i === (numArr.length -1)) {
+            winNumElem += '</span>';
+        }
+        else if (i !== (numArr.length - 1)) {
+            winNumElem += ', </span>';
+        }
     }
     winNumDiv.innerHTML = '';
     winNumDiv.insertAdjacentHTML('afterbegin',winNumElem);
 
-    if (nthTry > 0) {
-        matchingNums();
+    for(let i = 1; i < nthTry; i++) {
+        matchingNums(i);
     }
 }
 
 // 생성번호들과 당첨번호를 맞춰보기.
-function matchingNums() {
-    let tryTimes = nthTry; // 발행한 로또 갯수.
+function matchingNums(tryNth) {
     let winNums = document.getElementsByClassName('winning-nums'); // 당첨번호들 가져오기.
     // 로또 번호를 가져오기.
-    let tryElems = document.getElementById('try-'+tryTimes).getElementsByClassName('lotto-num');
+    let tryElems = document.getElementById('try-'+tryNth).getElementsByClassName('lotto-num');
 
     // 로또 번호를 비교하기.
-    let matchedNums = [];
-    let winNum;
-    let tryNum;
+    let matchedNums = []; // 당첨된 번호 저장.
+    let winNum; // 이번주 당첨 번호.
+    let tryNum; // 내가 산 로또 번호.
+    let matchedNumCnt = 0; // 당첨된 갯수.
     for (let i = 0; i < winNums.length; i++) {
         for (let j = 0; j < tryElems.length; j++) {
-            winNum = winNums[i].innerHTML;
-            tryNum = tryElems[j].innerHTML;
+            winNum = winNums[i].innerHTML.trim().replace(',','');
+            tryNum = tryElems[j].innerHTML.trim();
             if (winNum === tryNum) {
                 matchedNums.push(tryNum);
+                matchedNumCnt++;
             }
         }
     }
 
+    outputMatchedNumCnt(matchedNumCnt, tryNth);
     console.log(matchedNums);
 
     // 당첨번호 엘리먼트 만들기.
     let matchedNumElem = '';
-
-
-
 }
+
+// 당첨번호 갯수를 표시.
+function outputMatchedNumCnt(matchedNumCnt, tryNth) {
+    let cntElem = '<div><span> 당첨 갯수 : ' + matchedNumCnt + '</span></div>';
+    document.getElementById('try-'+tryNth).insertAdjacentHTML('afterend', cntElem);
+}
+
+
