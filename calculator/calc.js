@@ -1,8 +1,7 @@
-let num1;
-let num2;
 let calcStr = '';
 let calcResult;
 let mark;
+let continueYn = false;
 
 window.onload = function () {
     eventListeners();
@@ -17,25 +16,36 @@ function eventListeners() {
     let calcBtns = document.querySelectorAll('.calc-btn');
     for (let i = 0; i < calcBtns.length; i++) {
         calcBtns[i].addEventListener('click', function() {
-            if (num1 === undefined) {
-                num1 = getValue();
-                mark = event.target.innerHTML;
-                calcStr += num1 + " " + mark + " ";
+            mark = event.target.innerHTML;
+            if (continueYn === true) {
+                outputResult();
             }
-            else if (num1 !== undefined) {
-                num2 = Number(getValue());
-                doCalc(num2);
-                outputContinue();
-            }
-            inputNumReset();
 
+            inputNum = getValue();
+            if (calcResult === undefined) {
+                calcResult = inputNum;
+                calcStr = calcResult + ' ' + mark + ' ';
+            }
+            else if (calcResult !== undefined) {
+                doCalc(inputNum);
+                calcStr += inputNum + ' ' + mark + ' ';
+            }
+            document.querySelector('#calc-go-btn').disabled = false;
+            outputResult();
         });
     }
 
     document.querySelector('#calc-go-btn').addEventListener('click', function() {
-        num2 = getValue();
-        doCalc(num2);
+        let inputNum = getValue();
+        if (inputNum === '') {
+            calcStr += ' = ' + calcResult;
+        }
+        else if (inputNum !== '') {
+            doCalc(inputNum);
+            calcStr += inputNum + ' = ' + calcResult;
+        }
         outputResult();
+        continueYn = true;
     });
 
     document.querySelector('#reset-btn').addEventListener('click', function() {
@@ -43,45 +53,28 @@ function eventListeners() {
     });
 }
 
-function doCalc(num2) {
-    num1 = Number(num1);
-
+function doCalc(inputNum) {
     if (mark === '+') {
-        calcResult = num1 + num2;
+        calcResult = calcResult + inputNum;
     }
     else if (mark === '-') {
-        calcResult = num1 - num2;
+        calcResult = calcResult - inputNum;
     }
     else if (mark === '×') {
-        calcResult = num1 * num2;
+        calcResult = calcResult * inputNum;
     }
     else if (mark === '÷') {
-        calcResult = num1 / num2;
+        calcResult = calcResult / inputNum;
     }
-}
-
-function outputContinue() {
-    calcStr = calcResult + " " + mark + " ";
-    document.querySelector('#result').innerHTML = calcStr;
-    document.querySelector('#inputNum').value = '';
 }
 
 function outputResult() {
-    calcStr = calcResult;
-    document.querySelector('#result').innerHTML = calcStr;
-    document.querySelector('#inputNum').value = '';
-}
-
-function inputNumReset() {
     document.querySelector('#result').innerHTML = calcStr;
     document.querySelector('#inputNum').value = '';
     document.querySelector('#inputNum').focus();
-    document.querySelector('#calc-go-btn').disabled = false;
 }
 
 function resetCalc() {
-    num1 = undefined;
-    num2 = undefined;
     mark = undefined;
     calcResult = undefined;
     calcStr = '';
