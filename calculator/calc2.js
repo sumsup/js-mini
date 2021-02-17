@@ -1,3 +1,8 @@
+// TODO
+// phase 2.
+// - 숫자 버튼 조합으로 계산 가능하게.
+// - 키보드로 계산 가능하게.
+
 let inputNum;
 let outputStr = '';
 let mark;
