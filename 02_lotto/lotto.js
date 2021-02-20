@@ -105,9 +105,6 @@ function matchingNums(tryNth) {
     }
 
     outputMatchedNum(matchedNumCnt, tryNth, matchedNums);
-
-    // 당첨번호 엘리먼트 만들기.
-    let matchedNumElem = '';
 }
 
 // 당첨에 적중한 번호와 당첨 갯수 표시.
@@ -115,7 +112,6 @@ function matchingNums(tryNth) {
 function outputMatchedNum(matchedNumCnt, tryNth, matchedNumArr) {
     // 맞춰본 번호가 없으면 진행.
     let matchedTryElem = document.getElementById('matched-try-'+tryNth);
-
 
     if (matchedTryElem === null) {
         let matchedNumDiv = '<div id="matched-try-'+tryNth +'"></div>';
@@ -132,8 +128,8 @@ function outputMatchedNum(matchedNumCnt, tryNth, matchedNumArr) {
         }
     }
 
-    let matchedNumAndCntElem = '<span> 당첨 갯수 : ' + matchedNumCnt + '</span><br>' +
-    '<span>당첨번호 : ' + matchedNums + '</span>';
+    let matchedNumAndCntElem = '<span> 당첨 갯수 : ' + matchedNumCnt + '</span><br><span>당첨번호 : '
+        + matchedNums + '</span>';
     document.getElementById('matched-try-'+tryNth).innerHTML = matchedNumAndCntElem;
 
 }
