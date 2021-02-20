@@ -17,20 +17,27 @@ window.onload = function() {
 }
 
 function eventListeners() {
-    // 메모 컨트롤 엔터 등록.
-    document.querySelector('#memo-text').addEventListener('keydown', ctrlEnterMemoRegisterEvent);
-
-    // 메모 컨트롤 엔터 등록 해제.
-    document.querySelector('#memo-text').addEventListener('keyup', deleteKeyDownFlag);
-
     // 메모를 가지고 온다.
     document.querySelector('#add-memo').addEventListener('click', registerMemo);
 
     // 메모를 삭제한다. 이벤트 위임.
-    document.querySelector('#memo-output-div').addEventListener('click', deleteOneMemo);
+    document.querySelector('#div-memo-output').addEventListener('click', deleteOneMemo);
 
     // 선택삭제 한다.
     document.querySelector('#del-selected-memos').addEventListener('click', deleteSelectedMemos);
+
+    // 메모 컨트롤 엔터 등록.
+    document.querySelector('#memo-text').addEventListener('keydown', ctrlEnterMemoRegisterEvent);
+
+    // 메모 컨트롤 엔터 등록 이벤트 해제.
+    document.querySelector('#memo-text').addEventListener('keyup', deleteKeyDownFlag);
+
+    // 메모를 휴지통에 drag & drop 으로 삭제하도록.
+    // 마우스 다운 이벤트가 발생했을때, 메모 아이디를 글로벌에 저장.
+    // 휴지통에 마우스 업 이벤트가 발생했을 때, 글로벌에 저장된 요소 삭제.
+    // 이벤트 위임.
+    document.querySelector('#div-memo-output').addEventListener('');
+
 }
 
 // 메모 등록 진행.
@@ -46,14 +53,16 @@ function registerMemo() {
 function outputMemo(memo) {
     memoNum++;
     let memoHTML = makeMemoElem(memo);
-    let memoOutputElem = document.querySelector('#memo-output-div');
+    let memoOutputElem = document.querySelector('#div-memo-output');
     memoOutputElem.insertAdjacentHTML('afterbegin', memoHTML);
+    let thisMemoElem = document.querySelector('#memo-'+memoNum);
+    setAttributeToMemos(thisMemoElem);
 }
 
 // 화면에 출력할 메모요소를 생성.
 function makeMemoElem(memo) {
     let nowDate = new Date().toLocaleString();
-    let memoHTML = '<div style="white-space: pre;" id="memo-' + memoNum + '"><div><label><input type="checkbox" name="del-checked">' +
+    let memoHTML = '<div id="memo-' + memoNum + '"><div><label><input type="checkbox" name="del-checked">' +
         '</label><span>메모 번호 : '
         + memoNum + '</span></div><p>' + memo + '</p><span>등록날짜 : ' + nowDate + '<br>' +
         '------------------------</span><button class="del-memo-btn">삭제</button></div>';
@@ -100,4 +109,12 @@ function ctrlEnterMemoRegisterEvent() {
 // 키보드 이벤트를 삭제.
 function deleteKeyDownFlag() {
     delete keydownObj[event.key];
+}
+
+// 메모요소에 속성을 추가해 준다.
+function setAttributeToMemos(thisMemoElem) {
+    thisMemoElem.setAttribute('draggable', 'true');
+
+    let setStyle = 'white-space: pre;';
+    thisMemoElem.setAttribute('style', setStyle);
 }
