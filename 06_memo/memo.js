@@ -3,32 +3,43 @@
 // TODO 메모 수정 기능.
 // TODO 메모를 텍스트 파일에 저장 하고 불러 오도록 하는 기능.
 // TODO 메모 등록/삭제/수정 시 효과음 추가.
-// TODO ctrl + enter 시 메모 등록.
-// TODO 삭제 로직을 담당하는 하나의 함수를 만들어서 삭제할 요소를 매개변수로 받아서 삭제하도록 일원화.
+
+// TODO 삭제 로직을 담당하는 하나의 함수를 만들어서 삭제할 요소를 매개변수로 받아서 삭제하도록 일원화. 매개변수를 안받으면 함수화하는 의미가 없지....
+// 그런데 이게 parentNode와 childNode가 달라서 공통화 하기가 까다롭네....
+// 더 나은 요소 삭제 로직이 없을까?
 
 // global variable.
 let memoNum = 0; // 메모 번호.
+let keydownObj = {};
 
 window.onload = function() {
     eventListeners();
 }
 
 function eventListeners() {
-    // 메모를 가지고 온다.
-    document.querySelector('#add-memo').addEventListener('click',function() {
-        let memo = document.querySelector('#memo-text').value;
+    // 메모 컨트롤 엔터 등록.
+    document.querySelector('#memo-text').addEventListener('keydown', ctrlEnterMemoRegisterEvent);
 
-        console.log(memo);
-        outputMemo(memo);
-        document.querySelector('#memo-text').value = '';
-        document.querySelector('#memo-text').focus();
-    });
+    // 메모 컨트롤 엔터 등록 해제.
+    document.querySelector('#memo-text').addEventListener('keyup', deleteKeyDownFlag);
+
+    // 메모를 가지고 온다.
+    document.querySelector('#add-memo').addEventListener('click', registerMemo);
 
     // 메모를 삭제한다. 이벤트 위임.
-    document.querySelector('#memo-output-div').addEventListener('click', deleteMemo);
+    document.querySelector('#memo-output-div').addEventListener('click', deleteOneMemo);
 
     // 선택삭제 한다.
     document.querySelector('#del-selected-memos').addEventListener('click', deleteSelectedMemos);
+}
+
+// 메모 등록 진행.
+function registerMemo() {
+    let memo = document.querySelector('#memo-text').value;
+
+    outputMemo(memo);
+    document.querySelector('#memo-text').value = '';
+    document.querySelector('#memo-text').focus();
 }
 
 // 메모를 화면에 표시해 준다.
@@ -65,7 +76,8 @@ function deleteSelectedMemos() {
     }
 }
 
-function deleteMemo() {
+// 메모 하나만 삭제.
+function deleteOneMemo() {
     // 클릭한 요소가 삭제 버튼인지 확인.
     let targetElem = event.target;
     if (targetElem.getAttribute('class') !== 'del-memo-btn') {
@@ -75,4 +87,17 @@ function deleteMemo() {
     // 부모요소를 가지고 와서 자식 요소를 삭제.
     let parentDiv = targetElem.parentNode.parentNode;
     parentDiv.removeChild(targetElem.parentNode);
+}
+
+// ctrl + enter로 메모등록.
+function ctrlEnterMemoRegisterEvent() {
+    keydownObj[event.key] = true;
+    if (keydownObj['Control'] && keydownObj['Enter']) {
+        registerMemo();
+    }
+}
+
+// 키보드 이벤트를 삭제.
+function deleteKeyDownFlag() {
+    delete keydownObj[event.key];
 }
