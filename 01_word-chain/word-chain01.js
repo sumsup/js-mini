@@ -38,8 +38,10 @@ function inputWord() {
 function resetWordChain() {
     classNum = 0;
     point = 0;
+    combo = 0;
     document.getElementById('wordBox').innerHTML = '';
     document.getElementById('word').value = '';
+    document.getElementById('combo').innerHTML = combo;
     document.getElementById('point').innerHTML = point;
     document.getElementById('word').focus();
 }

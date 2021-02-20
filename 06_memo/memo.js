@@ -1,5 +1,5 @@
 // TODO 전체 등록 메모 수 표시.
-// TODO 메모 삭제 휴지통 아이콘에 드래그 앤 드랍해서.
+// TODO 메모 삭제 휴지통 아이콘에 드래그 앤 드랍해서. 휴지통에 마우스 오버 되면 뭔가 다른 효과 주기. 빨간색 박스라던가??
 // TODO 메모 수정 기능.
 // TODO 메모를 텍스트 파일에 저장 하고 불러 오도록 하는 기능.
 // TODO 메모 등록/삭제/수정 시 효과음 추가.
@@ -37,7 +37,6 @@ function eventListeners() {
     // 휴지통에 마우스 업 이벤트가 발생했을 때, 글로벌에 저장된 요소 삭제.
     // 이벤트 위임.
     document.querySelector('#div-memo-output').addEventListener('');
-
 }
 
 // 메모 등록 진행.
@@ -111,7 +110,7 @@ function deleteKeyDownFlag() {
     delete keydownObj[event.key];
 }
 
-// 메모요소에 속성을 추가해 준다.
+// 메모요소에 속성을 추가해 준다.ㅏ
 function setAttributeToMemos(thisMemoElem) {
     thisMemoElem.setAttribute('draggable', 'true');
 
