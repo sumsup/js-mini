@@ -104,22 +104,24 @@ function matchingNums(tryNth) {
         }
     }
 
-    outputMatchedNumCnt(matchedNumCnt, tryNth);
-    outputMatchedNum(matchedNums, tryNth);
-    console.log(matchedNums);
+    outputMatchedNum(matchedNumCnt, tryNth, matchedNums);
 
     // 당첨번호 엘리먼트 만들기.
     let matchedNumElem = '';
 }
 
-// 당첨번호 갯수를 표시.
-function outputMatchedNumCnt(matchedNumCnt, tryNth) {
-    let cntElem = '<div><span> 당첨 갯수 : ' + matchedNumCnt + '</span></div>';
-    document.getElementById('try-'+tryNth).insertAdjacentHTML('afterend', cntElem);
-}
+// 당첨에 적중한 번호와 당첨 갯수 표시.
+// args : 맞춘갯수, 시도한 번호, 맞춘숫자들.
+function outputMatchedNum(matchedNumCnt, tryNth, matchedNumArr) {
+    // 맞춰본 번호가 없으면 진행.
+    let matchedTryElem = document.getElementById('matched-try-'+tryNth);
 
-// 시도한 것중에 당첨된 숫자를 표시
-function outputMatchedNum(matchedNumArr, tryNth) {
+
+    if (matchedTryElem === null) {
+        let matchedNumDiv = '<div id="matched-try-'+tryNth +'"></div>';
+        document.getElementById('try-'+tryNth).insertAdjacentHTML('beforeend', matchedNumDiv);
+    }
+
     let matchedNums = '';
     for (let i = 0; i < matchedNumArr.length; i++) {
         if (i !== (matchedNumArr.length - 1)) {
@@ -130,6 +132,8 @@ function outputMatchedNum(matchedNumArr, tryNth) {
         }
     }
 
-    matchedNumElem = '<div><span>당첨번호 : ' + matchedNums + '</span></div>';
-    document.getElementById('try-'+tryNth).insertAdjacentHTML('afterend',matchedNumElem);
+    let matchedNumAndCntElem = '<span> 당첨 갯수 : ' + matchedNumCnt + '</span><br>' +
+    '<span>당첨번호 : ' + matchedNums + '</span>';
+    document.getElementById('matched-try-'+tryNth).innerHTML = matchedNumAndCntElem;
+
 }
