@@ -10,13 +10,13 @@ let user = {
     score : 0,
     percent2 : 0.5,
     percent3 : 0.33
-}
+};
 
 // 게임 오브젝트.
 let game = {
     isComputerTurn : true,
     shotsLeft : 15
-}
+};
 
 function onComputerShoot() {
     if (!game.isComputerTurn) {
@@ -105,7 +105,7 @@ function showText(s) {
 function updateComputerScore(score) {
     computer.score += score;
     let comScoreElem = document.getElementById('computer-score');
-    comScoreElem.innerHTML = comScore;
+    comScoreElem.innerHTML = computer.score;
 }
 
 function updateUserScore(score) {
@@ -150,4 +150,33 @@ function updateAI() {
         computer.percent2 = 0.4;
         computer.percent3 = 0.28;
     }
+}
+
+// 다시 하기 기능.
+function restartGame() {
+    computer = {
+        score : 0,
+        percent2 : 0.5,
+        percent3 : 0.33
+    };
+
+    user = {
+        score : 0,
+        percent2 : 0.5,
+        percent3 : 0.33
+    };
+
+    game = {
+        isComputerTurn : true,
+        shotsLeft : 15,
+        startMsg : '컴퓨터부터 시작합니다!'
+    };
+
+    document.getElementById('shots-left').innerHTML = 15;
+    document.getElementById('computer-score').innerHTML = 0;
+    document.getElementById('user-score').innerHTML = 0;
+    document.getElementsByClassName('btn-computer')[0].disabled = false;
+    document.getElementById('text').innerHTML = game.startMsg;
+
+
 }
