@@ -14,6 +14,9 @@
 // - 단일책임의 원칙. 하나의 flag는 하나의 목적으로.
 // - 분산된 로직을 하나로 모으기.
 
+// TODO
+// 리펙토링을 통해서 로직 단순화.
+
 let inputNum;
 let outputStr = '';
 let outputMark; // 화면에 표시용 기호.
