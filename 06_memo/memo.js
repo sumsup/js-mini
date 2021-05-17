@@ -36,7 +36,7 @@ function eventListeners() {
     // 마우스 다운 이벤트가 발생했을때, 메모 아이디를 글로벌에 저장.
     // 휴지통에 마우스 업 이벤트가 발생했을 때, 글로벌에 저장된 요소 삭제.
     // 이벤트 위임.
-    document.querySelector('#div-memo-output').addEventListener('');
+    // document.querySelector('#div-memo-output').addEventListener('');
 }
 
 // 메모 등록 진행.
@@ -54,8 +54,13 @@ function outputMemo(memo) {
     let memoHTML = makeMemoElem(memo);
     let memoOutputElem = document.querySelector('#div-memo-output');
     memoOutputElem.insertAdjacentHTML('afterbegin', memoHTML);
-    let thisMemoElem = document.querySelector('#memo-'+memoNum);
-    setAttributeToMemos(thisMemoElem);
+    let thisMemoElems = document.querySelectorAll('.memo-content-div');
+    for (let i = 0; thisMemoElems.length; i++) {
+        let memoElem = thisMemoElems[i];
+        setAttributeToMemos(memoElem);
+    }
+    document.getElementById('memo-text').value = '';
+
 }
 
 // 화면에 출력할 메모요소를 생성.
@@ -63,7 +68,7 @@ function makeMemoElem(memo) {
     let nowDate = new Date().toLocaleString();
     let memoHTML = '<div id="memo-' + memoNum + '"><div><label><input type="checkbox" name="del-checked">' +
         '</label><span>메모 번호 : '
-        + memoNum + '</span></div><p>' + memo + '</p><span>등록날짜 : ' + nowDate + '<br>' +
+        + memoNum + '</span></div><div class="memo-content-div">' + memo + '</div><span>등록날짜 : ' + nowDate + '<br>' +
         '------------------------</span><button class="del-memo-btn">삭제</button></div>';
 
     return memoHTML;
@@ -110,10 +115,11 @@ function deleteKeyDownFlag() {
     delete keydownObj[event.key];
 }
 
-// 메모요소에 속성을 추가해 준다.ㅏ
+// 메모요소에 속성을 추가해 준다.
 function setAttributeToMemos(thisMemoElem) {
     thisMemoElem.setAttribute('draggable', 'true');
 
     let setStyle = 'white-space: pre;';
     thisMemoElem.setAttribute('style', setStyle);
+    thisMemoElem.setAttribute('contenteditable',true);
 }
