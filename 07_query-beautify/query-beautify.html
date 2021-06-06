@@ -5,9 +5,22 @@
     <script src="query-beautify.js"></script>
     <title>MyBatis Query Beautifier</title>
 </head>
+<style>
+    #reset-btn {
+        top: 20px;
+        right: 20px;
+        position: fixed;
+    }
+</style>
 <body>
-    <textarea rows="10" cols="100" id="query"></textarea>
-    <button type="submit" onclick="f()">이쁘게</button>
+    <div id="head-div">
+        <h1>Java ResultSet Query Beautifier</h1>
+        <button type="button" id="reset-btn" onclick="resetOutput()">결과창 초기화</button>
+    </div>
+    <div>
+        <textarea rows="10" cols="100" id="query"></textarea>
+        <button type="submit" onclick="f()">이쁘게</button>
+    </div>
     <div>
         <pre id="query-result"></pre>
     </div>
