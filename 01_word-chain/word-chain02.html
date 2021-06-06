@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>끝말잇기 2</title>
+</head>
+<body>
+    <label>입력단어</label>
+    <input type="text" id="input-word">
+    <button onclick="inputWord()">제출</button>
+    <div>
+        <p>단어</p>
+        <div id="output-div">
+
+        </div>
+    </div>
+</body>
+<script>
+    let preWord; // 직전입력 단어.
+
+    function inputWord() {
+        const inputWord = document.querySelector('#input-word').value;
+
+        // 이전단어가 있으면?
+        if (preWord !== undefined) {
+            // 이전 단어의 마지막 글자를 가져온다.
+            const lastWord = preWord.charAt(preWord.length - 1);
+
+            // 이전 단어의 마지막 글자가 현재 입력된 단어의 첫글자와 일치하는지 확인한다.
+            if (lastWord !== inputWord.charAt(0)) {
+                // 불일치하면 alert. 끝말잇기 실패.
+                alert('끝말잇기 실패!');
+                return;
+            }
+        }
+
+        // 일치하면 단어 표시.
+        let $p = document.createElement('p');
+        $p.textContent = inputWord;
+
+        document.querySelector('#output-div').appendChild($p);
+        preWord = inputWord;
+    }
+</script>
+</html>
