@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <script src="query-beautify.js"></script>
-    <title>MyBatis Query Beautifier</title>
+    <title>MyBatis Query Beautifier MK-1</title>
 </head>
 <style>
     #reset-btn {
         top: 20px;
         right: 20px;
-        position: fixed;
+        position: relatieve;
     }
 </style>
 <body>
@@ -18,11 +18,93 @@
         <button type="button" id="reset-btn" onclick="resetOutput()">결과창 초기화</button>
     </div>
     <div>
+        <label for="query">쿼리입력</label>
         <textarea rows="10" cols="100" id="query"></textarea>
+        <br>
+        <label for="params">파라미터 입력</label>
+        <textarea id="params" cols="100" rows="10"></textarea>
         <button type="submit" onclick="f()">이쁘게</button>
     </div>
     <div>
         <pre id="query-result"></pre>
     </div>
 </body>
+<script>
+    function f() {
+    let query = document.querySelector('#query').value;
+    let params = document.querySelector('#params').value;
+
+    console.log('query : ' + query);
+    console.log('params : ' + params);
+
+    let paramsArr = params.split(', ');
+    for (let i = 0; i < paramsArr.length; i++) {
+        let param = paramsArr[i];
+        console.log(param);
+        if (param.includes('Long') || param.includes('Integer') || param.includes('BigDecimal')) {
+            paramsArr[i] = param.slice(0, param.indexOf('('));
+        }
+        else if(param === 'null') {
+            
+        }
+        else {
+            paramsArr[i] = "'" + param.slice(0, param.indexOf('(')) +"'";
+
+        }
+
+        query = query.replace('?' , paramsArr[i]);
+    }
+
+
+    console.log("result : " + query);
+
+    let convertedEnter = query.replaceAll("\n", " ");
+    let converted = convertedEnter
+            .replaceAll("SELECT ", "select \n\t".toUpperCase())
+            .replaceAll(", ", ", \n\t")
+            .replaceAll(" FROM ", "\nfrom \n\t".toUpperCase())
+            .replaceAll(" WHERE ", "\nwhere \n\t".toUpperCase())
+            .replaceAll(" INNER JOIN ", "\ninner join ".toUpperCase())
+            .replaceAll(" LEFT OUTER JOIN ", "\nleft outer join ".toUpperCase())
+            .replaceAll(" RIGHT OUTER JOIN ", "\nright outer join ".toUpperCase())
+            .replaceAll(" LEFT JOIN ", "\nleft join ".toUpperCase())
+            .replaceAll(" RIGHT JOIN ", "\nright join ".toUpperCase())
+            .replaceAll(" ON ", "\n\ton ".toUpperCase())
+            .replaceAll(" AND ", "\n\tand ".toUpperCase())
+            .replaceAll(" OR ", "\n\tor ".toUpperCase())
+            .replaceAll(" ||", "\n\t||".toUpperCase())
+            .replaceAll(" &&", "\n\t&&".toUpperCase())
+            .replaceAll(" IN ", "\n\tin ".toUpperCase())
+            .replaceAll("IS NOT NULL", "is not null".toUpperCase())
+            .replaceAll("IS NULL", "is null".toUpperCase())
+            .replaceAll(" ORDER BY", "\norder by".toUpperCase())
+            .replaceAll(" DESC;", " desc;".toUpperCase())
+            .replaceAll(" ASC;", " asc;".toUpperCase()) + ';';
+
+    console.log("output query : " + converted);
+
+    document.getElementById('query-result').value = '';
+    document.getElementById('query-result').append(converted);
+    
+    copyToClipboard(converted);
+
+    alert('결과 쿼리가 복사되었습니다.');
+}
+
+function resetOutput() {
+    let isResetOk = confirm("정말 초기화 하시겠습니까?\n출력한 쿼리들이 전부 사라집니다.");
+    if (isResetOk) {
+        document.querySelector('#query-result').textContent = '';
+    }
+}
+
+function copyToClipboard(resultQuery) {
+    const $copy = document.createElement('textarea');
+    document.body.appendChild($copy);
+    $copy.value = resultQuery;
+    $copy.select();
+    document.execCommand('copy');
+    document.body.removeChild($copy);
+}
+</script>
 </html>
