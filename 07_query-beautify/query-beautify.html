@@ -1,110 +1,247 @@
+<!--
+    TODO: 복사완료 글씨가 서서히 사라지게 하기.
+    TODO: 화면에 쿼리 생성날짜 표시.
+    TODO: 생성쿼리 복사 버튼 추가.
+    TODO: textarea에 붙여넣기 안해도 '이쁘게' 버튼만 누르면 클립보드에 복사되 있는 쿼리 불러와서 자동으로 결과 생성.
+    TODO: 쿼리 정렬 알고리즘 고도화. 개선점 구체적으로 기록해 놓기.
+    TODO: 출력한 쿼리에 이름 붙여서 로컬 파일에 저장 가능하게.
+    TODO: footer에 copyright reserved 붙여넣기.
+-->
+<!--
+    DONE LIST :
+    TODO: 복사 알림창 대신 화면에 복사완료 표시 띄우기.
+    TODO: 붙여넣기 하면 바로 복사되게.
+    TODO: '결과창 초기화' 버튼 오른쪽으로 '복사완료!' 문구 옮기기. CSS 배치와 관련하여.
+    TODO: 생성 쿼리 구분 줄 표시.
+    TODO: insert, update, delete 문의 경우에도 정렬 기능 추가.
+    TODO: DOM 엘렘들 가운데 정렬.
+    TODO: '클립보드에 복사 되었습니다' 문구 5초뒤 자동삭제.
+-->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <script src="query-beautify.js"></script>
     <title>MyBatis Query Beautifier MK-1</title>
 </head>
+
 <style>
+    #all-contents {
+        margin: 0 auto;
+        width: 710px;
+    }
+
+    #head-title {
+        text-align: center;
+    }
+
     #reset-btn {
         top: 20px;
         right: 20px;
-        position: relatieve;
+        display: block;
+    }
+
+    .head-status-item {
+        float: left;
+        margin: 10px;
+    }
+
+    #head-div:after {
+        clear: both;
+        content: "";
+        display: block;
+    }
+
+    #copy-status {
+        color: red;
+        animation: fadeOut ease 10s;
+    }
+
+    .textarea-label {
+        margin: 5px 0px;
+        display: block;
+    }
+
+    #run-pretty {
+        display: block;
+        float: right;
+    }
+
+    #main-box {
+        width: 700px;
+    }
+
+    #query-textarea {
+        width: 700px;
+        resize: none;
     }
 </style>
+
 <body>
-    <div id="head-div">
-        <h1>Java ResultSet Query Beautifier</h1>
-        <button type="button" id="reset-btn" onclick="resetOutput()">결과창 초기화</button>
-    </div>
-    <div>
-        <label for="query">쿼리입력</label>
-        <textarea rows="10" cols="100" id="query"></textarea>
-        <br>
-        <label for="params">파라미터 입력</label>
-        <textarea id="params" cols="100" rows="10"></textarea>
-        <button type="submit" onclick="f()">이쁘게</button>
-    </div>
-    <div>
-        <pre id="query-result"></pre>
+    <div id="all-contents">
+        <h1 id="head-title">Java ResultSet Query Beautifier</h1>
+        <div id="head-div">
+            <div id="header" class="head-status-item">
+                <button type="button" id="reset-btn" onclick="resetOutput()">결과창 초기화</button>
+            </div>
+            <div class="head-status-item">
+                <span id="copy-status"></span>
+            </div>
+        </div>
+        <div id="main-box">
+            <label for="query-textarea" class="textarea-label">정렬할 쿼리 로그를 아래에 붙여넣어 주세요.</label>
+            <textarea rows="10" id="query-textarea" spellcheck="false"></textarea>
+            <button id='run-pretty' type="submit">이쁘게</button>
+        </div>
+        <div id="query-result"></div>
     </div>
 </body>
+
 <script>
-    function f() {
-    let query = document.querySelector('#query').value;
-    let params = document.querySelector('#params').value;
+    let paramToken = 'Parameters: ';
 
-    console.log('query : ' + query);
-    console.log('params : ' + params);
+    runEventListeners();
 
-    let paramsArr = params.split(', ');
-    for (let i = 0; i < paramsArr.length; i++) {
-        let param = paramsArr[i];
-        console.log(param);
-        if (param.includes('Long') || param.includes('Integer') || param.includes('BigDecimal')) {
-            paramsArr[i] = param.slice(0, param.indexOf('('));
-        }
-        else if(param === 'null') {
-            
-        }
-        else {
-            paramsArr[i] = "'" + param.slice(0, param.indexOf('(')) +"'";
-
-        }
-
-        query = query.replace('?' , paramsArr[i]);
+    function runEventListeners() {
+        // document.querySelector('#query').addEventListener('paste', f);
+        document.querySelector('#run-pretty').addEventListener('click', main);
+        document.querySelector('#query-textarea').addEventListener('focus', clearCopyStatus);
     }
 
+    function main() {
+        let query = document.querySelector('#query-textarea').value;
 
-    console.log("result : " + query);
+        let resultQuery = getQuery(query);
+        let params = getParams(query);
 
-    let convertedEnter = query.replaceAll("\n", " ");
-    let converted = convertedEnter
-            .replaceAll("SELECT ", "select \n\t".toUpperCase())
+        resultQuery = replaceResultSetQuery(resultQuery, params);
+        let converted = queryPrettify(resultQuery);
+
+        outputQuery(converted); // 화면에 표시.
+        copyToClipboard(converted);
+
+        setTimeout(clearCopyStatus, 5000);
+    }
+
+    function outputQuery(convertedQuery) {
+        let $resultPre = document.createElement('pre');
+        $resultPre.textContent = convertedQuery;
+        document.querySelector('#query-result').appendChild($resultPre);
+
+        let $seperatedLine = document.createElement('p');
+        $seperatedLine.textContent = '===============================================================';
+        document.querySelector('#query-result').appendChild($seperatedLine);
+    }
+
+    function resetOutput() {
+        document.querySelector('#query-result').innerHTML = '';
+    }
+
+    function copyToClipboard(resultQuery) {
+        const $copy = document.createElement('textarea');
+        document.body.appendChild($copy);
+        $copy.value = resultQuery;
+        $copy.select();
+        document.execCommand('copy');
+        document.body.removeChild($copy);
+
+        document.querySelector('#copy-status').textContent = '클립보드에 자동 복사 되었습니다.';
+    }
+
+    function getQuery(query) {
+        let queryToken = findQueryToken(query);
+
+        let resultQuery = query.substring(query.indexOf(queryToken), query.length);
+        resultQuery = resultQuery.substring(0, resultQuery.indexOf(paramToken) - 104);
+
+        return resultQuery;
+    }
+
+    function getParams(query) {
+        let params = query.substring(query.indexOf(paramToken) + paramToken.length, query.length);
+        params = params.substring(0, params.lastIndexOf(')') + 1);
+        return params;
+    }
+
+    function replaceResultSetQuery(resultQuery, params) {
+        let paramsArr = params.split(', ');
+        for (let i = 0; i < paramsArr.length; i++) {
+            let param = paramsArr[i];
+            if (param.includes('Long') || param.includes('Integer') || param.includes('BigDecimal')) {
+                paramsArr[i] = param.slice(0, param.indexOf('('));
+            } else if (param === 'null') {
+
+            } else {
+                paramsArr[i] = "'" + param.slice(0, param.indexOf('(')) + "'";
+
+            }
+
+            resultQuery = resultQuery.replace('?', paramsArr[i]);
+        }
+        return resultQuery;
+    }
+
+    function queryPrettify(resultQuery) {
+        let convertedEnter = resultQuery.replaceAll("\n", " ");
+        let converted = convertedEnter
+            .replaceAll("SELECT ", "SELECT \n\t")
+            .replaceAll("INSERT INTO ", "INSERT INTO \n\t")
+            .replaceAll("UPDATE ", "UPDATE \n\t")
+            .replaceAll("DELETE FROM ", "DELETE FROM \n\t")
             .replaceAll(", ", ", \n\t")
-            .replaceAll(" FROM ", "\nfrom \n\t".toUpperCase())
-            .replaceAll(" WHERE ", "\nwhere \n\t".toUpperCase())
-            .replaceAll(" INNER JOIN ", "\ninner join ".toUpperCase())
-            .replaceAll(" LEFT OUTER JOIN ", "\nleft outer join ".toUpperCase())
-            .replaceAll(" RIGHT OUTER JOIN ", "\nright outer join ".toUpperCase())
-            .replaceAll(" LEFT JOIN ", "\nleft join ".toUpperCase())
-            .replaceAll(" RIGHT JOIN ", "\nright join ".toUpperCase())
-            .replaceAll(" ON ", "\n\ton ".toUpperCase())
-            .replaceAll(" AND ", "\n\tand ".toUpperCase())
-            .replaceAll(" OR ", "\n\tor ".toUpperCase())
-            .replaceAll(" ||", "\n\t||".toUpperCase())
-            .replaceAll(" &&", "\n\t&&".toUpperCase())
-            .replaceAll(" IN ", "\n\tin ".toUpperCase())
-            .replaceAll("IS NOT NULL", "is not null".toUpperCase())
-            .replaceAll("IS NULL", "is null".toUpperCase())
-            .replaceAll(" ORDER BY", "\norder by".toUpperCase())
-            .replaceAll(" DESC;", " desc;".toUpperCase())
-            .replaceAll(" ASC;", " asc;".toUpperCase()) + ';';
+            .replaceAll(" FROM ", "\nFROM \n\t")
+            .replaceAll(" VALUES( ", "\nVALUES( \n\t")
+            .replaceAll(" SET ", "\nSET \n\t")
+            .replaceAll(" WHERE ", "\nWHERE \n\t")
+            .replaceAll(" INNER JOIN ", "\nINNER JOIN ")
+            .replaceAll(" LEFT OUTER JOIN ", "\nLEFT OUTER JOIN ")
+            .replaceAll(" RIGHT OUTER JOIN ", "\nRIGHT OUTER JOIN ")
+            .replaceAll(" LEFT JOIN ", "\nLEFT JOIN ")
+            .replaceAll(" RIGHT JOIN ", "\nRIGHT JOIN ")
+            .replaceAll(" ON ", "\n\tON ")
+            .replaceAll(" AND ", "\n\tAND ")
+            .replaceAll(" OR ", "\n\tOR ")
+            .replaceAll(" ||", "\n\t||")
+            .replaceAll(" &&", "\n\t&&")
+            .replaceAll(" IN ", "\n\tIN ")
+            .replaceAll("IS NOT NULL", "IS NOT NULL")
+            .replaceAll("IS NULL", "IS NULL")
+            .replaceAll(" ORDER BY", "\nORDER BY")
+            .replaceAll(" DESC;", " DESC;")
+            .replaceAll(" ASC;", " ASC;");
 
-    console.log("output query : " + converted);
+        converted = addSemiColon(converted);
 
-    document.getElementById('query-result').value = '';
-    document.getElementById('query-result').append(converted);
-    
-    copyToClipboard(converted);
-
-    alert('결과 쿼리가 복사되었습니다.');
-}
-
-function resetOutput() {
-    let isResetOk = confirm("정말 초기화 하시겠습니까?\n출력한 쿼리들이 전부 사라집니다.");
-    if (isResetOk) {
-        document.querySelector('#query-result').textContent = '';
+        return converted;
     }
-}
 
-function copyToClipboard(resultQuery) {
-    const $copy = document.createElement('textarea');
-    document.body.appendChild($copy);
-    $copy.value = resultQuery;
-    $copy.select();
-    document.execCommand('copy');
-    document.body.removeChild($copy);
-}
+    function addSemiColon(addSemiColonQuery) {
+        if (!addSemiColonQuery.includes(';')) {
+            addSemiColonQuery += ';';
+        }
+        return addSemiColonQuery;
+    }
+
+    function findQueryToken(query) {
+        let queryToken;
+        if (query.includes('SELECT ')) {
+            queryToken = 'SELECT';
+        } else if (query.includes('INSERT INTO ')) {
+            queryToken = 'INSERT';
+        } else if (query.includes('UPDATE ')) {
+            queryToken = 'UPDATE';
+        } else if (query.includes('DELETE FROM ')) {
+            queryToken = 'DELETE';
+        }
+
+        return queryToken;
+    }
+
+    function clearCopyStatus() {
+        // fadeout 애니메이션 추가.
+
+
+        document.querySelector('#copy-status').textContent = '';
+    }
 </script>
 </html>
