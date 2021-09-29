@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<style>
-    
-</style>
+<link rel="stylesheet" type='text/css' href="calc.css">
 <body>
     <!-- 
         기획 :
@@ -29,9 +26,34 @@
              - 계산 히스토리 저장.
              - 계산 히스토리 선택시, 결과값에 이어서 계산 가능.
     -->
-
-    
-    
+    <div class='calc-container'>
+        <div class='mark-div'>
+            <div>+</div>
+            <div>-</div>
+            <div>X</div>
+            <div>⁒</div>
+            <div>=</div>
+        </div>
+        <div class='number-div'>
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+            <div>6</div>
+            <div>7</div>
+            <div>8</div>
+            <div>9</div>
+            <div>0</div>
+        </div>
+        <div class='out-bar'>
+            <div class='result-div'>
+                <div id='result-panel'>계산식</div>
+                <div id='result-output'></div>
+            </div>
+            <div id='reset-btn'>초기화</div>
+        </div>
+    </div>
 </body>
 <script src="calc.js"></script>
 </html>
