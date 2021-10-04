@@ -1,0 +1,27 @@
+label {
+    vertical-align: top;
+    margin: 10px 0px;
+    display: block;
+}
+
+#main-container {
+    margin: 20px;
+}
+
+#memo-output {
+    margin-top: 20px;
+}
+
+#memo-output div {
+    border: 1px solid darkgreen;
+    margin-top: 10px;
+    width: 350px;
+    padding: 5px;
+}
+
+#memo-ta {
+    padding: 5px;
+    width: 300px;
+    height: 300px;
+    resize: none;
+}

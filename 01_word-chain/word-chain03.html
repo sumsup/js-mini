@@ -2,9 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>word chain 03</title>
 </head>
 <body>
-$END$
+    <label for="word-input">단어 입력</label>
+    <input id="word-input">
+    <button id="submit-word">제출</button>
+    <div id="output">
+
+    </div>
 </body>
+<script>
+    let prevWord;
+
+    document.querySelector('#submit-word').addEventListener('click', () => {
+        let word = document.querySelector('#word-input').value;
+
+        //
+        if (prevWord !== undefined) {
+            if (word.charAt(0) === prevWord.charAt(prevWord.length - 1)) {
+                document.querySelector('#output').insertAdjacentHTML("beforeend", '<span> --> ' + word + '</span>');
+                prevWord = word;
+                document.querySelector('#word-input').value = '';
+                document.querySelector('#word-input').focus();
+                return;
+            }
+
+            alert('끝말잇기 실패!');
+            document.querySelector('#output').innerHTML = '';
+            document.querySelector('#word-input').value = '';
+            document.querySelector('#word-input').focus();
+            return;
+        }
+
+        document.querySelector('#output').insertAdjacentHTML("afterbegin", '<span>' + word + '</span>');
+        prevWord = word;
+
+    });
+</script>
 </html>

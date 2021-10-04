@@ -8,15 +8,15 @@
     <title>끝말잇기</title>
 </head>
 <body>
-    <div>
+    <div id='container'>
         <h1>끝말잇기</h1>
         <div id='board'>
             <p> 시작 시간 : <span id="today"></span> </p>
             <span>점수판 : </span><span id='point'>0</span>
         <span>콤보 : </span><span id='combo'>0</span></div>
         <button class='reset-btn' onclick='resetWordChain()'>초기화</button>
+        <input type='text' id='word'>&nbsp;<button onclick="inputWord()">제출</button>
+        <div id='wordBox'></div>
     </div>
-    <input type='text' id='word'>&nbsp;<button onclick="inputWord()">제출</button>
-    <div id='wordBox'></div>
 </body>
 </html>

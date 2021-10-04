@@ -1,0 +1,13 @@
+* {
+    border: 1px solid green;
+}
+
+#container {
+    margin: 40px;
+}
+
+h1 {
+    display: inline;
+    padding: 10px;
+    box-sizing: content-box;
+}
