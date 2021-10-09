@@ -1,0 +1,59 @@
+#container {
+    border: 1px solid red;
+    /* 
+    display: inline-block; 
+    inline-block 이면 margin 0 auto 가 안 먹는다?
+    */
+    width: 700px;
+    height: 100%;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.game-header {
+    border: 1px solid green;
+    width: 680px;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.game-header button, .game-header input {
+    width: 70px;
+    height: 40px;
+}
+
+#winning-nums-div {
+    border: 1px solid green;
+    width: 660px;
+    height: 30px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dotted-line {
+    margin: 5px auto;
+    border: 1px solid green;
+    width: 600px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#lotto-num-div {
+    margin: 5px auto;
+    border: 1px solid green;
+    width: 600px;
+    height: 100%;
+    box-sizing: border-box;
+}
